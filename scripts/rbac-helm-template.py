@@ -34,13 +34,12 @@ def main():
 def args_parser():
     parser = argparse.ArgumentParser(description='rbac to helm template script')
     parser.add_argument('y', metavar='$1', type=str, help='yaml file path')
-    args = parser.parse_args()
-    return args
+    return parser.parse_args()
 
 
 def role(_yaml):
     name = _yaml['metadata']['name']
-    _yaml['metadata']['name'] = '{}-{}'.format(fullname, name)
+    _yaml['metadata']['name'] = f'{fullname}-{name}'
     _yaml['metadata']['namespace'] = namespace
     print(_yaml)
 
@@ -48,9 +47,9 @@ def role(_yaml):
 def role_binding(_yaml):
     name = _yaml['metadata']['name']
     role_ref_name = _yaml['roleRef']['name']
-    _yaml['metadata']['name'] = '{}-{}'.format(fullname, name)
+    _yaml['metadata']['name'] = f'{fullname}-{name}'
     _yaml['metadata']['namespace'] = namespace
-    _yaml['roleRef']['name'] = '{}-{}'.format(fullname, role_ref_name)
+    _yaml['roleRef']['name'] = f'{fullname}-{role_ref_name}'
     for key, value in enumerate(_yaml['subjects']):
         if value['kind'] == 'ServiceAccount':
             _yaml['subjects'][key]['name'] = service_account_name
@@ -60,15 +59,15 @@ def role_binding(_yaml):
 
 def cluster_role(_yaml):
     name = _yaml['metadata']['name']
-    _yaml['metadata']['name'] = '{}-{}'.format(fullname, name)
+    _yaml['metadata']['name'] = f'{fullname}-{name}'
     print(_yaml)
 
 
 def cluster_role_binding(_yaml):
     name = _yaml['metadata']['name']
     role_ref_name = _yaml['roleRef']['name']
-    _yaml['metadata']['name'] = '{}-{}'.format(fullname, name)
-    _yaml['roleRef']['name'] = '{}-{}'.format(fullname, role_ref_name)
+    _yaml['metadata']['name'] = f'{fullname}-{name}'
+    _yaml['roleRef']['name'] = f'{fullname}-{role_ref_name}'
     for key, value in enumerate(_yaml['subjects']):
         if value['kind'] == 'ServiceAccount':
             _yaml['subjects'][key]['name'] = service_account_name
